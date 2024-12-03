@@ -7,10 +7,11 @@ import json
 import aocd
 
 class Task:
-    def __init__(self, num, *part_fcns, test=False):
+    def __init__(self, num, *part_fcns, test=False, testnum=0):
         self.part_fcns = part_fcns
         self.tasknum = num
         self.test = test
+        self.testnum = testnum
 
         script_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
         cur_dir = os.getcwd()
@@ -22,7 +23,8 @@ class Task:
         if not test:
             self.filename = f"{self.prefix}inputs/input{num:02d}.txt"
         else:
-            self.filename = f"{self.prefix}inputs/test{num:02d}.txt"
+            test_append = "" if self.testnum == 0 else f"_{self.testnum}"
+            self.filename = f"{self.prefix}inputs/test{num:02d}{test_append}.txt"
 
         self.ensure_data()
 
@@ -38,8 +40,10 @@ class Task:
 
             if self.test:
                 examples = aocd.get_puzzle(session=session, day=self.tasknum).examples
-                if len(examples) > 0:
-                    data = examples[-1].input_data
+                if len(examples) >= self.testnum + 1:
+                    data = examples[self.testnum].input_data
+                else:
+                    raise Exception(f"There are only {len(examples)} examples.")
             else:
                 data = aocd.get_data(session=session, day=self.tasknum)
 
