@@ -82,7 +82,7 @@ class Task:
         for i, f in enumerate(self.part_fcns):
             self.time_and_run(f, i+1)
 
-    def benchmark(self, repeats=10, header=True):
+    def benchmark(self, repeats=10, prime=False, header=True):
         with open(self.filename) as f:
             self.text = f.read()
 
@@ -92,6 +92,8 @@ class Task:
         for i, f in enumerate(self.part_fcns):
             timers = []
             for r in range(repeats):
+                if prime:
+                    self.time_and_run(f, i+1, output=False)
                 t = self.time_and_run(f, i+1, output=False)
                 timers.append(t)
             values.extend(get_timers_summary(timers))

@@ -14,6 +14,6 @@ tasks = [ SourceFileLoader(name, path).load_module() for name, path in to_load]
 n = 50
 if len(sys.argv) > 1:
     n = int(sys.argv[1])
-tasks[0].task.benchmark(n, header=True)
+tasks[0].task.benchmark(repeats=n, prime=True, header=True)
 for task_module in tasks[1:]:
-    task_module.task.benchmark(n, header=False)
+    task_module.task.benchmark(repeats=n, prime=True, header=False)
